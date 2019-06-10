@@ -1,10 +1,5 @@
-# Problem Set 3: Simulating the Spread of Disease and Virus Population Dynamics 
 import random
 import pylab
-
-''' 
-Begin helper code
-'''
 
 class NoChildException(Exception):
     """
@@ -183,7 +178,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     pylab.legend()
     pylab.show()
     
-#simulationWithoutDrug(100, 1000, .1, .05, 10)
+#simulationWithoutDrug(100, 1000, 0.1, 0.025, 50)
 
 class ResistantVirus(SimpleVirus):
     """
@@ -236,7 +231,6 @@ class ResistantVirus(SimpleVirus):
         """
         if drug in self.resistances:
             return self.resistances[drug]
-
 
     def reproduce(self, popDensity, activeDrugs):
         """
@@ -291,14 +285,14 @@ class ResistantVirus(SimpleVirus):
         
         for i in self.getResistances():
             #Calculate chances a mutation occurs
-            flag = (random.uniform(0, 1) <= self.getMutProb())
+            flag = (random.random() <= self.getMutProb())
             #If mutation occurs, then switch viruse's resistance to the drug
             if flag:
                 childResistances[i] = not(self.getResistances()[i])
             else:
                 childResistances[i] = self.getResistances()[i]
         #Determine if the virus reproduces
-        if random.uniform(0, 1) <= (self.maxBirthProb * (1-popDensity)):
+        if random.random() <= (self.maxBirthProb * (1-popDensity)):
             #Create another instance of virus
             return ResistantVirus(self.maxBirthProb, self.clearProb, childResistances, self.getMutProb())
         
@@ -425,23 +419,50 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
              (a float between 0-1).
     numTrials: number of simulation runs to execute (an integer)
     """
+    
+    
+    """
+    virusPop = [0]*300 #Keep track of virus populations at different timesteps
+    #run numTrials trials on list of numViruses viruses and call update 300 times
+    for trial in range(numTrials):
+        #instantiate a list of SimpleVirus of size numViruses 
+        viruses = []
+        for i in range(numViruses):
+            viruses.append(SimpleVirus(maxBirthProb, clearProb))
+        patient = Patient(viruses, maxPop) #Create a Patient instance
+        for step in range(300):
+            virusPop[step] += patient.update()
+    
+    for i in range(300):
+        virusPop[i] /= numTrials
+    
+    pylab.figure('SimpleVirus')
+    pylab.plot(range(300), virusPop, label = "SimpleVirus Population")
+    pylab.title('SimpleVirus- Simulation without Drugs')
+    pylab.xlabel('Time Steps')
+    pylab.ylabel('Average Virus Population')
+    pylab.legend()
+    pylab.show()
+    
+    """
+    
     drug = 'guttagonol'
     virusPop = [0] * 300 #Keep track of virus populations for 300 timesteps
     resistantVirusPop = [0] * 300
     
-    for n in range(numTrials):
+    for trial in range(numTrials):
         viruses=[]
         for i in range(numViruses):
             viruses.append(ResistantVirus(maxBirthProb, clearProb, resistances, mutProb))
-        
+            
         patient = TreatedPatient(viruses, maxPop) #Create a list of Patient instances
-        for i in range(300):
-            if i == 150:
+        for step in range(300):
+            if step == 150:
                 patient.addPrescription(drug)
             #patient.update()
-            virusPop[i] += patient.update()
-            resistantVirusPop[i] += patient.getResistPop([drug])
-            
+            virusPop[step] += patient.update()
+            resistantVirusPop[step] += patient.getResistPop([drug])
+        
     for i in range(300):
         virusPop[i] /= numTrials
         resistantVirusPop[i] /= numTrials
@@ -455,4 +476,4 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     pylab.legend()
     pylab.show()
     
-simulationWithDrug(100, 1000, .1, 0.05, {'guttagonol': True}, .005, 5)
+simulationWithDrug(100, 1000, .3, 0.2, {'guttagonol': False}, .8, 50)
