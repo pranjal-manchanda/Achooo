@@ -178,7 +178,7 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     pylab.legend()
     pylab.show()
     
-#simulationWithoutDrug(100, 1000, 0.1, 0.025, 50)
+simulationWithoutDrug(100, 1000, 0.1, 0.025, 50)
 
 class ResistantVirus(SimpleVirus):
     """
@@ -418,51 +418,26 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     mutProb: mutation probability for each ResistantVirus particle
              (a float between 0-1).
     numTrials: number of simulation runs to execute (an integer)
-    """
-    
-    
-    """
-    virusPop = [0]*300 #Keep track of virus populations at different timesteps
-    #run numTrials trials on list of numViruses viruses and call update 300 times
-    for trial in range(numTrials):
-        #instantiate a list of SimpleVirus of size numViruses 
-        viruses = []
-        for i in range(numViruses):
-            viruses.append(SimpleVirus(maxBirthProb, clearProb))
-        patient = Patient(viruses, maxPop) #Create a Patient instance
-        for step in range(300):
-            virusPop[step] += patient.update()
-    
-    for i in range(300):
-        virusPop[i] /= numTrials
-    
-    pylab.figure('SimpleVirus')
-    pylab.plot(range(300), virusPop, label = "SimpleVirus Population")
-    pylab.title('SimpleVirus- Simulation without Drugs')
-    pylab.xlabel('Time Steps')
-    pylab.ylabel('Average Virus Population')
-    pylab.legend()
-    pylab.show()
-    
-    """
-    
+    """    
     drug = 'guttagonol'
     virusPop = [0] * 300 #Keep track of virus populations for 300 timesteps
     resistantVirusPop = [0] * 300
-    
+    #Run numTrials number of trials on a patient
     for trial in range(numTrials):
         viruses=[]
         for i in range(numViruses):
             viruses.append(ResistantVirus(maxBirthProb, clearProb, resistances, mutProb))
-            
+        #Create instance of Treated Patient    
         patient = TreatedPatient(viruses, maxPop) #Create a list of Patient instances
+        #Note virus population for 300 time steps
         for step in range(300):
             if step == 150:
                 patient.addPrescription(drug)
             #patient.update()
             virusPop[step] += patient.update()
             resistantVirusPop[step] += patient.getResistPop([drug])
-        
+    
+    #Get the average for each time step
     for i in range(300):
         virusPop[i] /= numTrials
         resistantVirusPop[i] /= numTrials
@@ -470,7 +445,7 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     pylab.figure('ResistantVirus')
     pylab.plot(range(300), virusPop, label = "Viruses")
     pylab.plot(range(300), resistantVirusPop, label = "Resistant Viruses")
-    pylab.title('ResistantVirus simulation')
+    pylab.title('ResistantVirus simulation- Guttagonol introduced at TimeStep 150')
     pylab.xlabel('Time Steps')
     pylab.ylabel('Average Virus Population')
     pylab.legend()
