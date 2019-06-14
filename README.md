@@ -7,6 +7,7 @@ Creates 2 types of viruses:
 
 The basic idea behind viral population dynamics is that viruses need host cells to multiply. In essence, viral populations are bound by relatively straightforward population density dynamics. Once viral populations reach a maximum threshold, they do not grow/shrink any further unless interrupted by an artificial event (introduction of a drug, access to new host cells, etc.)
 
+### SimpleVirus
 The first simulation is that of a SimpleVirus with the following parameters:
   Initial Viral population- 100
   Maximum population possible- 1000
@@ -15,7 +16,8 @@ The first simulation is that of a SimpleVirus with the following parameters:
   Number of trials- 100
   
 <img src="images/SimpleVirus.png">
-  
+
+### ResistantVirus
 The second simulation takes the ResistantVirus class and creates a TreatedPatient instance with the following parameters:
   Initial viral population- 100
   Maximum population possible- 1000
