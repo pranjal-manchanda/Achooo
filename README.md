@@ -34,3 +34,5 @@ The second simulation takes the ResistantVirus class and creates a TreatedPatien
 **Guttagonol is introduced at Time Step 150 and drastically brings down the population of viruses.*
   
 <img src="images/ResistantVirus.png">
+
+Note that viruses can reproduce and develop resistances to drugs based upon the mutation probability. This is why the resistant population fluctuates with timeSteps. It is still affected by the introduction of guttagonol due to other factors such as birth probability, clear probability, etc. These factors can be adjusted to create different models based on a broad range of datasets.
